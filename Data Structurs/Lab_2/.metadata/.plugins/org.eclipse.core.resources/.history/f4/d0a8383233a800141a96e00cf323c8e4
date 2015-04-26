@@ -1,0 +1,305 @@
+/**
+ * The purpose of the StringSet class is to implement the collection data
+ * structure to store the unique authors of a book
+ * @author Jeremiah Smith
+ **/
+public class StringSet 
+{
+	private String[] authors;//array to hold the authors
+	private int numberOfAuthors;//the actual number of authors in the collection
+	
+	/**
+	 * No argument constructor that allocates memory for the authors array
+	 * this constructor has no parameters
+	 **/
+	public StringSet()
+	{
+		numberOfAuthors = 0;
+		authors = new String[2];
+	}
+	
+	/**
+	 * One argument constructor thats sets the initial capacity of the authors array to
+	 * to the parameter and sets the numberOfAuthers to 0
+	 * @param _capacity
+	 * the capacity of the collection
+	 * @precondition _capacity is a positive number
+	 * @throws IllegalArgumentException
+	 * will throw an IllegalArgunmentException if _capacity is less then 0
+	 **/
+	public StringSet(int _capacity)
+	{
+		if(_capacity <= 0)
+			throw new IllegalArgumentException("_capacity is a negative number or 0");
+		
+		this.numberOfAuthors = 0;
+		authors = new String[_capacity];
+		
+	}
+	
+	/**
+	 * Copy constructor that copies the instance variables from a current StringSet Object
+	 * to a new StringSet Object
+	 * @param object
+	 * Parameter that is a java Object
+	 * @precondition object must not be null
+	 * @precondition object must be an instance of StringSet
+	 * @throws IllegalArgumentException
+	 * will throw an exception if object is null
+	 * @throws IllegalArgumentException
+	 * will throw IllegalArgumentException if object is not of instance StringSet
+	 **/
+	public StringSet(Object object)
+	{
+		if(object == null)
+			throw new IllegalArgumentException("object is null");
+		
+		if(!(object instanceof StringSet))
+			throw new IllegalArgumentException("object is not an instance of StringSet");
+		
+		StringSet _StringSet = (StringSet)object;
+		
+		this.numberOfAuthors = _StringSet.numberOfAuthors;
+		this.authors = new String[_StringSet.authors.length];
+		
+		for(int i = 0; i < this.numberOfAuthors -1; i++)
+			this.authors[i] = new String(_StringSet.authors[i]);
+		
+	}
+	
+	/**
+	 *Method to return the actual number of elements in the collection 
+	 *@return numberOfAuthors
+	 **/
+	public int size()
+	{
+		return this.numberOfAuthors;
+	}
+	
+	/**
+	 * Method to return the current capacity of the StringSet object
+	 * @return authors.length
+	 */
+	public int capacity()
+	{
+		return this.authors.length;
+	}
+	
+	/**
+	 * Method to insure that the capacity of the collection is at least 
+	 * equal to minimumCapacity parameter
+	 * @param minimumCapacity
+	 * integer parameter used to test the current capacity of the collection
+	 * @precondition minimumCapacity should be a positive integer
+	 * @throws IllegalArgumentException
+	 * will throw an illegal argument exception if the parameter minimumCapcity
+	 * is not a positive integer
+	 */
+	private void ensureCapacity(int minimumCapacity)
+	{
+		if(minimumCapacity <= 0)
+			throw new IllegalArgumentException("minimumCapacity is less then or equal to 0");
+		
+		if(authors.length < minimumCapacity)
+		{
+			String[] temp = new String[2 * this.authors.length];
+			
+			for(int i = 0; i < this.numberOfAuthors; i++)
+				temp[i] = new String(authors[i]);
+			
+			this.authors = temp;
+		}
+	}
+	
+	/**
+	 * Method to search the collection to see if it contains the 
+	 * parameter
+	 * @param a
+	 * String parameter to search for in the collection
+	 * @precondition The String parameter can not be null
+	 * @return boolean
+	 * true if the collection contains the search parameter, false if it donse not
+	 **/
+	public boolean contains(String a)
+	{
+		if(a == null)
+			return false;
+		
+		
+		for(int i = 0; i < this.numberOfAuthors - 1; i++)
+			if (this.authors[i].equals(a))
+				return true;
+	
+		return false;
+	}
+	
+	/**
+	 * Method to add a string parameter to the collection
+	 * @param a
+	 * String to be added to the collection
+	 * @precondition Parameter must not be null
+	 * @precondition Collection must not already contain a copy of the string
+	 * @throws IllegalArgunmentException
+	 * If the parameter String is null will throw a Illegal Argument Exception
+	 */
+	public void add(String a)
+	{
+		if(a == null)
+			throw new IllegalArgumentException("Parameter String is null");
+		
+		this.ensureCapacity(this.numberOfAuthors + 1);
+		
+		if(!this.contains(a))
+		{
+			this.authors[this.numberOfAuthors] = new String(a);
+			this.numberOfAuthors++;
+		}
+			
+	}
+	
+	/**
+	 * Method to remove the String parameter if it exists in the collection
+	 * @param a
+	 * String to be removed form the collection
+	 * @precondition The String parameter can not be null
+	 * @throws IllegalArgmentException
+	 * If the String parameter is null function will throw a Illegal Argument Exception
+	 * @return boolean
+	 * Returns true if the String parameter was removed and false if it was not
+	 */
+	public boolean remove(String a)
+	{
+		if(a == null)
+			throw new IllegalArgumentException("Parameter is null");
+		
+		if(this.contains(a))
+			for(int i = 0; i < this.numberOfAuthors - 1; i++)
+				if(this.authors[i].equals(a))
+				{
+					this.authors[i] = new String(a);
+					this.numberOfAuthors--;
+					return true;
+				}
+					
+		
+		return false;
+	}
+	
+	/**
+	 * Method to add a String parameter to the collection if the collection is sorted in ascended order
+	 * @param a
+	 * String Parameter to be added to the collection
+	 * @precondition Parameter should not be null
+	 * @precondition Collection has to be sorted in ascended order
+	 * @throws IllegalArdumentException
+	 * Will throw an Illegal Argument Exception if the String argument is null
+	 * @throws UnsupportedOperationException
+	 * Will throw an UnsupportedOperationException if the collection is not in ascending order
+	 */
+	public void addOrdered(String a)
+	{
+		if(a == null)
+			throw new IllegalArgumentException("Parameter is null");
+		
+		for(int i = 0; i < this.numberOfAuthors - 1; i++)
+			if(authors[i].compareToIgnoreCase(authors[i+1]) < 0)
+				throw new UnsupportedOperationException("Collection is not sroted in acending order");
+		
+		this.ensureCapacity(this.numberOfAuthors + 1);
+		
+		if(!this.contains(a))
+			for(int i = this.numberOfAuthors - 1; i <= 0; i--)
+				if(this.authors[i].compareToIgnoreCase(a) < 0)
+					this.authors[i+1] = new String(this.authors[i]);
+			else
+				this.authors[i] = new String(a);
+			
+	}
+	
+	/**
+	 * Method to print the values of the instance variables
+	 * 
+	 */
+	public String toString()
+	{
+		return ("Current Usefull data is: " + this.numberOfAuthors + " and current capacity is: " + this.authors.length);
+	}
+	
+	/**
+	 * Main method to for testing with test cases
+	 * @param args
+	 */
+	public static void main(String args[])
+	{
+		//testing constructors
+		StringSet s1, s2, s3, s4, s5, s6;
+		Object obj = null;
+		
+		System.out.println("Testing no-parameter constructor");
+		s1 = new StringSet();
+		
+		System.out.println("s1 current stats " + s1.toString());
+		
+		//testing constructor with one parameter and precondition
+		System.out.println("Testing the precondition for the one parameter constructor");
+		try
+		{
+			s2 = new StringSet(-1);
+		}
+		catch (IllegalArgumentException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("Testing one parameter constructor");
+		
+		s3 = new StringSet(4);
+		System.out.println("The current Stats of s3 are " + s3.toString());
+		System.out.println("Testing add method");
+		
+		System.out.println("Testing the add method for precondition of parameter being null");
+		String testEmpty = null;
+		s3.add(testEmpty);
+		
+		//testing add method
+		System.out.println("Adding \"a\" to the s3 StringSet object");
+		s3.add("a");
+		System.out.println("Adding \"b\" to the s3 StringSet object");
+		s3.add("b");
+		System.out.println("Adding \"c\" to the s3 StringSet object");
+		s3.add("c");
+		System.out.println("Adding \"d\" to the s3 StringSet object");
+		s3.add("d");
+		System.out.println("Adding \"e\" to the s3 StringSet object");
+		s3.add("e");
+		
+		System.out.println("The current Stats of s3 are " + s3.toString());
+		
+		System.out.println("Testing copy constructor precondition null argunment");
+		
+		try
+		{
+			s4 = new StringSet(obj);
+		}
+		catch(IllegalArgumentException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("Testing copy constructor with correct argument");
+		try
+		{
+			s4 = new StringSet(s3);
+			System.out.println("The current Stats of s4 are " + s4.toString());
+		}
+		catch(IllegalArgumentException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		
+		
+		
+		
+		
+	}
+}

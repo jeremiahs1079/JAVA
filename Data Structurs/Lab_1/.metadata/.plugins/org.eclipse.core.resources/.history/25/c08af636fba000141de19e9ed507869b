@@ -1,0 +1,177 @@
+// CS 272 - lab assignment #1
+// Book.java
+// Jeremiah Smith
+// January 16, 2015
+
+public class Book
+{
+	//instance variables
+	private String title;
+	private int numOfAuthors;
+	private String[] authors;
+	private String isbn;
+	
+	//default constructor
+	public Book()
+	{
+		title = null;
+		isbn = null;
+		numOfAuthors = 3;
+		authors = new String[numOfAuthors];
+	}
+	
+	//constructor String parameter
+	public Book(String _title)
+	{
+		title = _title;
+		isbn = null;
+		numOfAuthors = 3;
+		authors = new String[numOfAuthors];
+	}
+	
+	//copy constructor
+	public Book(Book _book)
+	{
+		title = _book.getTitle();
+		numOfAuthors = _book.getAuthorNumber();
+		isbn = _book.getISBN();
+		
+		authors = new String[numOfAuthors];
+		
+		for(int i = 0; i < numOfAuthors; i++)
+			authors[i] = _book.authors[i];
+		
+	}
+	
+	//accessor methods
+	public String getTitle()
+	{
+		return title;
+	}
+	
+	public String getISBN()
+	{	
+		return isbn;
+	}
+	
+	public int getAuthorNumber()
+	{
+		return numOfAuthors;
+	}
+	
+	public String[] getAuthors()
+	{
+		return authors;
+	}
+	
+	//modification methods
+	public void setTitle(String _title)
+	{
+		title = _title;
+	}
+	
+	public void setISBN(String _isbn)
+	{
+		isbn = _isbn;
+	}
+	
+	public void setNumOfAuthors(int _numOfAuthors)
+	{
+		numOfAuthors = _numOfAuthors;
+		authors = new String[_numOfAuthors];
+	}
+	
+	public void setAuthors(String[] _authors)
+	{
+		if(authors.length == _authors.length)
+			for(int i = 0; i < authors.length; i++)
+				authors[i] = _authors[i];
+		
+		if(authors.length != _authors.length)
+		{
+			authors = new String[_authors.length];
+			for(int i = 0; i < authors.length; i++)
+				authors[i] = _authors[i];
+		}
+		
+	}
+	
+	//class methods
+	//addAuthor adds an author to the existing author list if there is room
+	public boolean addAuthor(String _author)
+	{
+		
+		//checking to see if there is an empty space in authors array
+		for(int i = 0; i < authors.length; i++)
+			if(authors[i] == null)
+			{
+				authors[i] = _author;
+				return true;
+			}
+		
+		//if number of authors is less then three copy authors
+		//then resize
+		//then add new author
+		if(numOfAuthors < 3)
+		{
+			//create a temp array for the current authors
+			String[] currentAuthors = new String[this.getAuthorNumber()];
+			
+			//copy current authors
+			for(int i = 0; i < authors.length; i++)
+				currentAuthors[i] = authors[i];
+			
+			//increment numOfAuthors and resize authors array
+			numOfAuthors++;
+			authors = new String[numOfAuthors];
+			
+			//copy current authors back into authors array
+			for(int i = 0; i < currentAuthors.length; i++)
+				authors[i] = currentAuthors[i];
+			
+			for(int i = 0; i < authors.length; i++ )
+				if(authors[i] == null)
+				{
+					authors[i] = _author;
+					return true;
+				}
+		}
+						
+		return false;
+	}
+	
+	//equals method to test for equality
+	public boolean equals(Book _book)
+	{
+		boolean isEqualTo = false;
+		
+		if(title == _book.title)
+			if(isbn == _book.isbn)
+				if(numOfAuthors == _book.numOfAuthors)
+					for(int i = 0; i < _book.authors.length; i++)
+						if(authors[i] != _book.authors[i])
+							isEqualTo = false;
+						else
+							isEqualTo = true;
+		
+		return isEqualTo;
+					
+	}
+	
+	//toString Method
+	public String toString()
+	{
+		String returnString = null;
+		
+		returnString = "Title: " + title + "\n";
+		returnString += "ISBN: " + isbn + "\n";
+		returnString += "Number of Authors: " + numOfAuthors + "\n";
+		
+		for(int i = 0; i < authors.length; i++)
+			returnString += "Author: " + (i + 1) + " " + authors[i] + "\n";
+			
+		return returnString;
+	}
+	
+	
+}
